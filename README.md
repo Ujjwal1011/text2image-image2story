@@ -2,7 +2,7 @@
 
 ## 🌟 Overview
 
-The **Gemini Creative Suite** is a versatile Streamlit web application that harnesses the power of the Google **Gemini API** for multi-modal and advanced natural language generation tasks. This suite offers two core creative functionalities: a **Visual Storyteller** that turns images into short fiction, and an **AI Image Generator** that uses Gemini for advanced prompt engineering before generating the final artwork.
+The **MLSE Project** is a versatile Streamlit web application that harnesses the power of the Google **Gemini API** for multi-modal and advanced natural language generation tasks. This suite offers two core creative functionalities: a **Visual Storyteller** that turns images into short fiction, and an **AI Image Generator** that uses Gemini for advanced prompt engineering before generating the final artwork.
 
 ***
 
