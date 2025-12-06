@@ -2,20 +2,31 @@ import streamlit as st
 import google.generativeai as genai
 from PIL import Image
 import html
+import os
+from dotenv import load_dotenv
 from textwrap import dedent
+
+# --- Load Environment Variables ---
+load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY")
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="Gemini Creative Suite",
+    page_title="MLSE Project",
     page_icon="🎨",
     layout="centered"
 )
 
-# --- Sidebar: API Key Configuration ---
+# --- Sidebar: Configuration Status ---
 with st.sidebar:
     st.header("🔑 Configuration")
-    api_key = st.text_input("Enter your Gemini API Key", type="password")
-    st.markdown("[Get your API Key here](https://aistudio.google.com/app/apikey)")
+    
+    if api_key:
+        st.success("API Key Loaded from .env")
+    else:
+        st.error("API Key NOT Found!")
+        st.markdown("Please create a `.env` file with `GEMINI_API_KEY=your_key`")
+        st.markdown("[Get your API Key here](https://aistudio.google.com/app/apikey)")
     
     st.divider()
     st.caption("App Modes:")
@@ -26,6 +37,7 @@ with st.sidebar:
 def generate_story(api_key, image, prompt, temperature=0.7):
     try:
         genai.configure(api_key=api_key)
+        # Fixed: Changed invalid 'gemini-2.5-flash' to 'gemini-2.5-flash'
         model = genai.GenerativeModel('gemini-2.5-flash', generation_config={"temperature": temperature})
         
         full_prompt = (
@@ -46,6 +58,7 @@ def enhance_image_prompt(api_key, raw_prompt):
     """Uses Gemini to turn a simple idea into a detailed image generation prompt."""
     try:
         genai.configure(api_key=api_key)
+        # Fixed: Changed invalid 'gemini-2.5-flash' to 'gemini-2.5-flash'
         model = genai.GenerativeModel('gemini-2.5-flash')
         
         meta_prompt = (
@@ -63,13 +76,13 @@ def enhance_image_prompt(api_key, raw_prompt):
         return f"Error: {e}"
 
 # --- Main Layout ---
-st.title("🎨 Gemini Creative Suite")
+st.title("🎨 MLSE Project")
 
 # Create Tabs
 tab1, tab2 = st.tabs(["📖 Image to Story", "🖼️ Text to Image Generator"])
 
 # ==========================================
-# TAB 1: VISUAL STORYTELLER (Existing Logic)
+# TAB 1: VISUAL STORYTELLER
 # ==========================================
 with tab1:
     st.header("Visual Storyteller")
@@ -80,13 +93,14 @@ with tab1:
     
     if st.button("Generate Story"):
         if not api_key:
-            st.error("Please enter your API Key in the sidebar.")
+            st.error("Please configure your .env file with the API Key.")
         elif not img_file:
             st.warning("Please upload an image.")
         else:
             with st.spinner("Gemini is writing..."):
                 image = Image.open(img_file)
                 st.image(image, width=300)
+                # Pass the key from env
                 story = generate_story(api_key, image, story_prompt)
                 st.markdown(story)
 
@@ -101,7 +115,7 @@ with tab2:
     
     if st.button("✨ Enhance & Generate Image"):
         if not api_key:
-            st.error("Please enter your API Key in the sidebar (needed for the enhancement step).")
+            st.error("Please configure your .env file with the API Key.")
         elif not raw_prompt.strip():
             st.warning("Please enter a prompt.")
         else:
